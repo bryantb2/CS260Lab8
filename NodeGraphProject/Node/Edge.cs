@@ -10,7 +10,7 @@ namespace NodeGraphLibrary
     {
         //class fields
         private int endIndex;
-        //private Edge next;
+        private Edge next;
         private const int EMPTY = -1;
         
         //constructor
@@ -29,6 +29,18 @@ namespace NodeGraphLibrary
             set
             {
                 this.endIndex = value;
+            }
+        }
+
+        public Edge Next
+        {
+            get
+            {
+                return this.next;
+            }
+            set
+            {
+                this.next = value;
             }
         }
     }

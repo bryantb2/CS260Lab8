@@ -11,7 +11,7 @@ namespace NodeGraphLibrary
         //class fields
         private string name;
         private bool visited;
-        private List<Edge> edges;
+        private Edge edges;
 
         //constructor
         public Node(string name, bool visited, Edge edges)
@@ -46,7 +46,7 @@ namespace NodeGraphLibrary
             }
         }
 
-        public List<Edge> GetEdges
+        public Edge GetEdges
         {
             get
             {
@@ -56,14 +56,44 @@ namespace NodeGraphLibrary
 
         public void AddEdge(Edge edge)
         {
-            this.edges.Add(edge);
+            //set old head to temp
+            //set new edge's next to temp
+            //set local edge equal to class edge
+            Edge temp = edges;
+            edge.Next = temp;
+            this.edges = edge;
         }
 
-        public Edge RemoveEdge(Edge destinationNode)
+        public Edge RemoveEdge(Edge edge)
         {
-            Edge temp = destinationNode;
-            this.edges.Remove(destinationNode);
-            return temp;
+            //iterate through the linked list of edges using ".Next"
+                //add each edge to a stack
+            //pop off stack
+                //if the popped value is equal to key, set as return value
+                //else add back to the list of edges
+            Edge temp = this.edges;
+            Stack<Edge> tempStack = new Stack<Edge>();
+            Edge returnEdge = null;
+            while (temp != null)
+            {
+                tempStack.Push(temp);
+                temp = temp.Next;
+            }
+            temp = null;
+            while (tempStack.Count != 0)
+            {
+                Edge popedValue = tempStack.Pop();
+                if(popedValue == edge)
+                {
+                    returnEdge = edge;
+                }
+                else
+                {
+                    popedValue.Next = temp;
+                }
+            }
+            this.edges = temp;
+            return returnEdge;
         }
     }
 }

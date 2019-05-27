@@ -9,15 +9,19 @@ namespace NodeGraphLibrary
     public class Graph
     {
         //Class fields
+        private const int defaultSize = 10;
+        private int size = defaultSize;
         private int numNodes = 0;
         private Node[] nodeArray;
-        private Edge[] edgeList;
+        private List<Edge> graphEdgeList;
         private bool[,] edgeMatrix;
 
         //Constructor
         public Graph()
         {
-
+            this.graphEdgeList = new List<Edge>();
+            this.nodeArray = new Node[defaultSize];
+            edgeMatrix = new bool[defaultSize, defaultSize];
         }
 
         //Public Methods
@@ -27,7 +31,7 @@ namespace NodeGraphLibrary
             //adds node with no edge value to none and visited to false
             if (numNodes >= nodeArray.Length)
             {
-                DoubleArray();
+                DoubleNodeArray();
             }
             Node newNode = new Node(name, false, null);
             this.nodeArray[numNodes++] = newNode;
@@ -41,17 +45,31 @@ namespace NodeGraphLibrary
             int startingIndex = FindNode(startingName);
             int endingIndex = FindNode(endingName);
 
-            //if both names do not exist
+            //if one of the names do not exist
             if (startingIndex == -1 || endingIndex == -1)
                 return false;
+
+            //matrix needs to be doubled if the number of nodes
+            if(numNodes >= size)
+            {
+                DoubleMatrixArray();
+            }
+
             //set links in edgeMatrix
             edgeMatrix[startingIndex, endingIndex] = true;
             edgeMatrix[endingIndex, startingIndex] = true;
 
-            //making new edges, adding them to each of the nodes
-            Edge beginningEdge = new Edge(endingIndex);
-            Edge endingEdge = new Edge(startingIndex);
-            nodeArray[startingIndex]
+            //making new edges
+            Edge firstNodeEdge = new Edge(endingIndex);
+            Edge secondNodeEdge = new Edge(startingIndex);
+
+            //Adding new edges to their respective nodes
+            nodeArray[startingIndex].AddEdge(firstNodeEdge);
+            nodeArray[endingIndex].AddEdge(secondNodeEdge);
+
+            //Add edges to the graph class's edge list
+            graphEdgeList.Add(firstNodeEdge);
+            graphEdgeList.Add(secondNodeEdge);
             return true;
         }
 
@@ -62,11 +80,25 @@ namespace NodeGraphLibrary
             {
                 Queue<Node> nodeQ = new Queue<Node>();
                 string outputStream = "";
-                int nodeLocation = FindNode(name);
-                if(nodeLocation <)
+                int nodeLocationIndex = FindNode(name);
+                if(nodeLocationIndex != -1)
+                {
+                    nodeQ.Enqueue(nodeArray[nodeLocationIndex]);
+                    nodeArray[nodeLocationIndex].Visited = true;
+                    while(nodeQ.Count != 0)
+                    {
+                        Node poppedNode = nodeQ.Dequeue();
+                        while(poppedNode)
+
+                    }
 
 
 
+                }
+                else
+                {
+                    throw new ArgumentException("Please enter a valid graph node identifier");
+                }
             }
             else
             {
@@ -149,7 +181,7 @@ namespace NodeGraphLibrary
             }
         }
 
-        private void DoubleArray()
+        private void DoubleNodeArray()
         {
             int newSize = (this.nodeArray.Length * 2);
             int oldSize = this.nodeArray.Length;
@@ -159,6 +191,26 @@ namespace NodeGraphLibrary
                 newArray[i] = nodeArray[i];
             }
             this.nodeArray = newArray;
+        }
+
+        private void DoubleMatrixArray()
+        {
+            //double default size
+            //create new array with new size
+            //iterate through old array with nested for loops
+                //stop when iterator reaches the end of old column size
+                //iterate row counter and repeat until done
+            int newSize = (size * 2);
+            bool[,] newEdgeMatrix = new bool[newSize, newSize];
+            for(int i = 0; i < size; i++)
+            {
+                for(int j = 0; j < size; i++)
+                {
+                    newEdgeMatrix[i,j] = this.edgeMatrix[i,j];
+                }
+            }
+            size = newSize;
+            this.edgeMatrix = newEdgeMatrix;
         }
     }
 }
