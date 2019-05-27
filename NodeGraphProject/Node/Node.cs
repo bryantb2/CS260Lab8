@@ -59,7 +59,7 @@ namespace NodeGraphLibrary
             //set old head to temp
             //set new edge's next to temp
             //set local edge equal to class edge
-            Edge temp = edges;
+            Edge temp = this.edges;
             edge.Next = temp;
             this.edges = edge;
         }
@@ -90,6 +90,7 @@ namespace NodeGraphLibrary
                 else
                 {
                     poppedValue.Next = temp;
+                    temp = poppedValue;
                 }
             }
             this.edges = temp;

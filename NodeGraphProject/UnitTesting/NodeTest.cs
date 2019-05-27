@@ -68,10 +68,30 @@ namespace UnitTesting
             Assert.AreEqual(edge1, linkedList);
         }
 
-        //[Test]
+        [Test]
         public void TestRemoveEdges()
         {
+            //adding edges
+            Edge edge1 = new Edge(2);
+            Edge edge2 = new Edge(3);
+            Edge edge3 = new Edge(4);
+            node1.AddEdge(edge1);
+            node1.AddEdge(edge2);
+            node1.AddEdge(edge3);
 
+            //removing center edge
+            node1.RemoveEdge(edge2);
+
+            //get list of edges
+            Edge linkedList = node1.GetEdges;
+
+            //this is to ensure that the edge variables are artifically linked for testing
+            edge1.Next = null;
+            edge3.Next = edge1;
+
+            Assert.AreEqual(edge3, linkedList);
+            linkedList = linkedList.Next;
+            Assert.AreEqual(edge1, linkedList);
         }
 
 
