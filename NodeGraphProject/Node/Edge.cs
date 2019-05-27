@@ -11,7 +11,6 @@ namespace NodeGraphLibrary
         //class fields
         private int endIndex;
         private Edge next;
-        private const int EMPTY = -1;
         
         //constructor
         public Edge(int endIndex)
