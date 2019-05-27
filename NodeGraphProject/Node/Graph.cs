@@ -11,7 +11,8 @@ namespace NodeGraphLibrary
         //Class fields
         private int numNodes = 0;
         private Node[] nodeArray;
-        private Edge[][] edgeMatrix;
+        private Edge[] edgeList;
+        private bool[,] edgeMatrix;
 
         //Constructor
         public Graph()
@@ -32,24 +33,97 @@ namespace NodeGraphLibrary
             this.nodeArray[numNodes++] = newNode;
         }
 
-        public void AddEdge(string startingName, string endingName)
+        public bool AddEdge(string startingName, string endingName)
         {
+            //if the user is bad and makes a circular path from a node to itself
+            if (startingName == endingName)
+                return false;
+            int startingIndex = FindNode(startingName);
+            int endingIndex = FindNode(endingName);
 
+            //if both names do not exist
+            if (startingIndex == -1 || endingIndex == -1)
+                return false;
+            //set links in edgeMatrix
+            edgeMatrix[startingIndex, endingIndex] = true;
+            edgeMatrix[endingIndex, startingIndex] = true;
+
+            //making new edges, adding them to each of the nodes
+            Edge beginningEdge = new Edge(endingIndex);
+            Edge endingEdge = new Edge(startingIndex);
+            nodeArray[startingIndex]
+            return true;
+        }
+
+        public string BreadthTraverse(string name)
+        {
+            //validate
+            if(name != "")
+            {
+                Queue<Node> nodeQ = new Queue<Node>();
+                string outputStream = "";
+                int nodeLocation = FindNode(name);
+                if(nodeLocation <)
+
+
+
+            }
+            else
+            {
+                throw new ArgumentException("Please input a valid non-empty arguement");
+            }
+            return "";
+        }
+
+        public string DepthFirst()
+        {
+            return "";
         }
 
         public string DisplayMatrix()
         {
-            return "";
+            string buffer = "";
+            //header destination line
+            for(int i = 0; i < numNodes; i++)
+            {
+                buffer += nodeArray[i].Name;
+                for(int j= 0; j < numNodes; j++)
+                {
+                    buffer += edgeMatrix[i,j];
+                }
+            }
+            return buffer;
         }
 
         public string DisplayEdges()
         {
-            return "";
+            string buffer = "";
+            for(int i = 0; i <numNodes; i++)
+            {
+                //displaying node names
+                buffer += nodeArray[i].Name;
+                buffer += "-";
+                //go down list of edges to concatenate
+                List<Edge> temp = nodeArray[i].GetEdges;
+                for(int j = 0; j < temp.Count; i++)
+                {
+                    buffer += nodeArray[temp[j].EndPoint].Name;
+                    buffer += " ";
+                }
+                buffer += "\n";
+            }
+            return buffer;
         }
 
         public string ListNodes()
         {
-            return "";
+            string nodeList = "";
+            for(int i = 0; i<numNodes;i++)
+            {
+                nodeList += nodeArray[i].Name;
+                nodeList += " ";
+            }
+            return nodeList;
         }
 
         //Private Methods

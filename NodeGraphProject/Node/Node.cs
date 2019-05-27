@@ -11,14 +11,14 @@ namespace NodeGraphLibrary
         //class fields
         private string name;
         private bool visited;
-        private Edge edges;
+        private List<Edge> edges;
 
         //constructor
         public Node(string name, bool visited, Edge edges)
         {
             this.name = name;
             this.visited = visited;
-            this.edges = edges;
+            this.edges.Add(edges);
         }
 
         //properties
@@ -44,6 +44,26 @@ namespace NodeGraphLibrary
             {
                 this.visited = value;
             }
+        }
+
+        public List<Edge> GetEdges
+        {
+            get
+            {
+                return this.edges;
+            }
+        }
+
+        public void AddEdge(Edge edge)
+        {
+            this.edges.Add(edge);
+        }
+
+        public Edge RemoveEdge(Edge destinationNode)
+        {
+            Edge temp = destinationNode;
+            this.edges.Remove(destinationNode);
+            return temp;
         }
     }
 }
