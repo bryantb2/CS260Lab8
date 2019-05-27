@@ -18,7 +18,7 @@ namespace NodeGraphLibrary
         {
             this.name = name;
             this.visited = visited;
-            this.edges.Add(edges);
+            this.edges = edges;
         }
 
         //properties
@@ -82,14 +82,14 @@ namespace NodeGraphLibrary
             temp = null;
             while (tempStack.Count != 0)
             {
-                Edge popedValue = tempStack.Pop();
-                if(popedValue == edge)
+                Edge poppedValue = tempStack.Pop();
+                if(poppedValue == edge)
                 {
                     returnEdge = edge;
                 }
                 else
                 {
-                    popedValue.Next = temp;
+                    poppedValue.Next = temp;
                 }
             }
             this.edges = temp;

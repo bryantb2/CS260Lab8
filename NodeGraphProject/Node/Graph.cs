@@ -88,7 +88,12 @@ namespace NodeGraphLibrary
                     while(nodeQ.Count != 0)
                     {
                         Node poppedNode = nodeQ.Dequeue();
-                        while(poppedNode)
+                        while(poppedNode != null)
+                        {
+
+
+
+                        }
 
                     }
 
@@ -136,11 +141,12 @@ namespace NodeGraphLibrary
                 buffer += nodeArray[i].Name;
                 buffer += "-";
                 //go down list of edges to concatenate
-                List<Edge> temp = nodeArray[i].GetEdges;
-                for(int j = 0; j < temp.Count; i++)
+                Edge temp = nodeArray[i].GetEdges;
+                while(temp != null)
                 {
-                    buffer += nodeArray[temp[j].EndPoint].Name;
+                    buffer += nodeArray[temp.EndPoint].Name;
                     buffer += " ";
+                    temp = temp.Next;
                 }
                 buffer += "\n";
             }
