@@ -16,11 +16,15 @@ namespace NodeGraphLibrary
         private List<Edge> graphEdgeList;
         private bool[,] edgeMatrix;
 
+        private Stack<int> holeIndexStack;
+        private bool nodeArrayHasHoles;
+
         //Constructor
         public Graph()
         {
             this.graphEdgeList = new List<Edge>();
             this.nodeArray = new Node[defaultSize];
+            this.holeIndexStack = new Stack<int>();
             edgeMatrix = new bool[defaultSize, defaultSize];
         }
 
@@ -28,13 +32,26 @@ namespace NodeGraphLibrary
         public void AddNode(string name)
         {
             //checks to see if the array is full
+            //if hasHoles is true
+                //pop value off stack 
+                //use popped index value as location for new node
             //adds node with no edge value to none and visited to false
             if (numNodes >= nodeArray.Length)
             {
                 DoubleNodeArray();
             }
-            Node newNode = new Node(name, false, null);
-            this.nodeArray[numNodes++] = newNode;
+            if(nodeArrayHasHoles == true)
+            {
+                int holeIndex = holeIndexStack.Pop();
+                Node newNode = new Node(name, false, null);
+                this.nodeArray[holeIndex] = newNode;
+            }
+            else
+            {
+                Node newNode = new Node(name, false, null);
+                this.nodeArray[numNodes++] = newNode;
+            }
+            CheckAndSetHasHoles();
         }
 
         public Node RemoveNode(string name)
@@ -47,6 +64,9 @@ namespace NodeGraphLibrary
                         find index in edgelist class */
                         //use index to remove edge in class list
                     //mark index of node as null
+                    //add index of removed node
+                    //if hasHoles bool is false, set to true
+                    //then remove any connections show on the matrix
                 //else throw exception
             int removeAtIndex = FindNode(name);
             if (removeAtIndex != -1)
@@ -62,6 +82,13 @@ namespace NodeGraphLibrary
                     }
                 }
                 nodeArray[removeAtIndex] = null;
+                RemoveFromMatrix(removeAtIndex);
+
+                holeIndexStack.Push(removeAtIndex);
+                if(nodeArrayHasHoles == false)
+                {
+                    nodeArrayHasHoles = true;
+                }
                 return temp;
             }
             else
@@ -227,12 +254,39 @@ namespace NodeGraphLibrary
             return -1;
         }
 
+        private void RemoveFromMatrix(int nodeIndex)
+        {
+            //search on both axis for any edge connections between the specified node
+            for(int i = 0; i < numNodes; i++)
+            {
+                if(edgeMatrix[nodeIndex,i] == true)
+                {
+                    edgeMatrix[nodeIndex, i] = false;
+                }
+            }
+            for (int j = 0; j < numNodes; j++)
+            {
+                if (edgeMatrix[j,nodeIndex] == true)
+                {
+                    edgeMatrix[j, nodeIndex] = false;
+                }
+            }
+        }
+
         private void ResetFalse()
         {
             //sets the visited property of each node to false
             for(int i = 0; i<numNodes; i++)
             {
                 nodeArray[i].Visited = false;
+            }
+        }
+
+        private void CheckAndSetHasHoles()
+        {
+            if(this.holeIndexStack.Count == 0)
+            {
+                this.nodeArrayHasHoles = false;
             }
         }
 
