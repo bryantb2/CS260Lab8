@@ -36,22 +36,29 @@ namespace NodeGraphLibrary
                 //pop value off stack 
                 //use popped index value as location for new node
             //adds node with no edge value to none and visited to false
-            if (numNodes >= nodeArray.Length)
+            if(name == "" || name == " ")
             {
-                DoubleNodeArray();
-            }
-            if(nodeArrayHasHoles == true)
-            {
-                int holeIndex = holeIndexStack.Pop();
-                Node newNode = new Node(name, false, null);
-                this.nodeArray[holeIndex] = newNode;
+                if (numNodes >= nodeArray.Length)
+                {
+                    DoubleNodeArray();
+                }
+                if (nodeArrayHasHoles == true)
+                {
+                    int holeIndex = holeIndexStack.Pop();
+                    Node newNode = new Node(name, false, null);
+                    this.nodeArray[holeIndex] = newNode;
+                }
+                else
+                {
+                    Node newNode = new Node(name, false, null);
+                    this.nodeArray[numNodes++] = newNode;
+                }
+                CheckAndSetHasHoles();
             }
             else
             {
-                Node newNode = new Node(name, false, null);
-                this.nodeArray[numNodes++] = newNode;
+                throw new ArgumentException("Invalid node name, must not be empty or use only spaces");
             }
-            CheckAndSetHasHoles();
         }
 
         public Node RemoveNode(string name)
@@ -133,6 +140,37 @@ namespace NodeGraphLibrary
             return true;
         }
 
+        public bool RemoveEdge(string startingName, string endingName)
+        {
+            //if the user is bad and makes a circular path from a node to itself
+            if (startingName == endingName)
+                return false;
+
+            int startingIndex = FindNode(startingName);
+            int endingIndex = FindNode(endingName);
+
+            //if one of the names do not exist
+            if (startingIndex == -1 || endingIndex == -1)
+                return false;
+
+            //set links in edgeMatrix to false
+            edgeMatrix[startingIndex, endingIndex] = false;
+            edgeMatrix[endingIndex, startingIndex] = false;
+
+            //making new edges
+            Edge firstNodeEdge = new Edge(endingIndex);
+            Edge secondNodeEdge = new Edge(startingIndex);
+
+            //Adding new edges to their respective nodes
+            nodeArray[startingIndex].RemoveEdge(firstNodeEdge);
+            nodeArray[endingIndex].RemoveEdge(secondNodeEdge);
+
+            //Add edges to the graph class's edge list
+            graphEdgeList.Remove(firstNodeEdge);
+            graphEdgeList.Remove(secondNodeEdge);
+            return true;
+        }
+        
         public string BreadthTraverse(string name)
         {
             //validate
@@ -175,9 +213,46 @@ namespace NodeGraphLibrary
             }
         }
 
-        public string DepthFirst()
+        public string DepthFirst(string name)
         {
-            return "";
+            //validate
+            if (name != "")
+            {
+                Stack<Node> nodeQ = new Stack<Node>();
+                string outputStream = "";
+                int nodeLocationIndex = FindNode(name);
+                if (nodeLocationIndex != -1)
+                {
+                    nodeQ.Push(nodeArray[nodeLocationIndex]);
+                    nodeArray[nodeLocationIndex].Visited = true;
+                    while (nodeQ.Count != 0)
+                    {
+                        Node poppedNode = nodeQ.Pop();
+                        Edge poppedEdges = poppedNode.GetEdges;
+                        while (poppedEdges != null)
+                        {
+                            Node nextNode = nodeArray[poppedEdges.EndPoint];
+                            if (nextNode.Visited != true)
+                            {
+                                outputStream += nextNode.Name;
+                                nextNode.Visited = true;
+                                nodeQ.Push(nextNode);
+                            }
+                            poppedEdges = poppedEdges.Next;
+                        }
+                    }
+                    ResetFalse();
+                    return outputStream;
+                }
+                else
+                {
+                    throw new ArgumentException("Please enter a valid graph node identifier");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Please input a valid non-empty arguement");
+            }
         }
 
         public string DisplayMatrix()
