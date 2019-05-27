@@ -36,7 +36,7 @@ namespace NodeGraphLibrary
                 //pop value off stack 
                 //use popped index value as location for new node
             //adds node with no edge value to none and visited to false
-            if(name == "" || name == " ")
+            if(name != "" || name != " ")
             {
                 if (numNodes >= nodeArray.Length)
                 {
@@ -193,6 +193,7 @@ namespace NodeGraphLibrary
                             if(nextNode.Visited != true)
                             {
                                 outputStream += nextNode.Name;
+                                outputStream += " ";
                                 nextNode.Visited = true;
                                 nodeQ.Enqueue(nextNode);
                             }
@@ -235,6 +236,7 @@ namespace NodeGraphLibrary
                             if (nextNode.Visited != true)
                             {
                                 outputStream += nextNode.Name;
+                                outputStream += " ";
                                 nextNode.Visited = true;
                                 nodeQ.Push(nextNode);
                             }
@@ -259,13 +261,16 @@ namespace NodeGraphLibrary
         {
             string buffer = "";
             //header destination line
-            for(int i = 0; i < numNodes; i++)
+            for (int i = 0; i < numNodes; i++)
             {
                 buffer += nodeArray[i].Name;
+                buffer += " ";
                 for(int j= 0; j < numNodes; j++)
                 {
                     buffer += edgeMatrix[i,j];
+                    buffer += " ";
                 }
+                buffer += "\n";
             }
             return buffer;
         }
@@ -296,8 +301,12 @@ namespace NodeGraphLibrary
             string nodeList = "";
             for(int i = 0; i<numNodes;i++)
             {
-                nodeList += nodeArray[i].Name;
-                nodeList += " ";
+                //dealing with array holes
+                if(nodeArray[i] != null) 
+                {
+                    nodeList += nodeArray[i].Name;
+                    nodeList += " ";
+                }
             }
             return nodeList;
         }
