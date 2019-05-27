@@ -37,6 +37,39 @@ namespace NodeGraphLibrary
             this.nodeArray[numNodes++] = newNode;
         }
 
+        public Node RemoveNode(string name)
+        {
+            //use find method to locate index of node desired for removal
+                //if not -1
+                    //store Node in temp
+                    //iterate through the Node's edges
+                        /* pass in edges to FindEdge method, use this to 
+                        find index in edgelist class */
+                        //use index to remove edge in class list
+                    //mark index of node as null
+                //else throw exception
+            int removeAtIndex = FindNode(name);
+            if (removeAtIndex != -1)
+            {
+                Node temp = nodeArray[removeAtIndex];
+                Edge nodeEdges = temp.GetEdges;
+                while (nodeEdges != null)
+                {
+                    int edgeRemoveIndex = FindEdge(nodeEdges);
+                    if (edgeRemoveIndex != -1)
+                    {
+                        graphEdgeList.RemoveAt(edgeRemoveIndex);
+                    }
+                }
+                nodeArray[removeAtIndex] = null;
+                return temp;
+            }
+            else
+            {
+                throw new ArgumentException("Arguement invalid, please enter valid node identifier");
+            }
+        }
+
         public bool AddEdge(string startingName, string endingName)
         {
             //if the user is bad and makes a circular path from a node to itself
@@ -88,17 +121,21 @@ namespace NodeGraphLibrary
                     while(nodeQ.Count != 0)
                     {
                         Node poppedNode = nodeQ.Dequeue();
-                        while(poppedNode != null)
+                        Edge poppedEdges = poppedNode.GetEdges;
+                        while(poppedEdges != null)
                         {
-
-
-
+                            Node nextNode = nodeArray[poppedEdges.EndPoint];
+                            if(nextNode.Visited != true)
+                            {
+                                outputStream += nextNode.Name;
+                                nextNode.Visited = true;
+                                nodeQ.Enqueue(nextNode);
+                            }
+                            poppedEdges = poppedEdges.Next;
                         }
-
                     }
-
-
-
+                    ResetFalse();
+                    return outputStream;
                 }
                 else
                 {
@@ -109,7 +146,6 @@ namespace NodeGraphLibrary
             {
                 throw new ArgumentException("Please input a valid non-empty arguement");
             }
-            return "";
         }
 
         public string DepthFirst()
@@ -167,10 +203,23 @@ namespace NodeGraphLibrary
         //Private Methods
         private int FindNode(string name)
         {
-            //finds the node in list and returns index
+            //finds the node in array and returns index
             for (int i = 0; i < numNodes; i++)
             {
                 if(nodeArray[i].Name == name)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private int FindEdge(Edge edge)
+        {
+            //finds the edge in list and returns index
+            for (int i = 0; i < numNodes; i++)
+            {
+                if (this.graphEdgeList[i] == edge)
                 {
                     return i;
                 }
